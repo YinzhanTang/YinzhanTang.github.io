@@ -17,7 +17,7 @@ Scatterplot.prototype = {
 
         var margin = { top: 30, right: 30, bottom: 45, left: 45 }
 
-        var width = 800 - margin.left - margin.right
+        var width = 1100 - margin.left - margin.right
         var height = 600 - margin.top - margin.bottom
 
         chart.svg = d3.select('#scatterplot')
@@ -33,7 +33,7 @@ Scatterplot.prototype = {
                 .range([0, 60]),
             x: d3.scaleLinear()
                 .domain([-10, 10])
-                .range([0, width]),
+                .range([0, width-300]),
             y: d3.scaleLog()
                 .domain([1, 100000])
                 .range([height, 0])
@@ -49,7 +49,7 @@ Scatterplot.prototype = {
 
         chart.svg.append('g')
             .attr('class', 'y-axis')
-            .attr('transform', 'translate(' + width/2 + ',0)')
+            .attr('transform', 'translate(' + width/2.83 + ',0)')
             .call(yAxis)
         
         chart.svg.append('text')      
@@ -59,19 +59,19 @@ Scatterplot.prototype = {
             .text('Autocracy')
         
         chart.svg.append('text')
-            .attr('x', width-80)
+            .attr('x', width-380)
             .attr('y', height-50)
             .attr('class', 'axis-label')
             .text('Democracy')
         
         chart.svg.append('text')
-            .attr('x', width/2-40)
+            .attr('x', width/2-200)
             .attr('y', height+40)
             .attr('class', 'axis-label')
             .text('PolityIV Index')
         
         chart.svg.append('text')
-            .attr('x', width/2-40)
+            .attr('x', width/2-200)
             .attr('y', -15)
             .attr('class', 'axis-label')
             .text('$GDP per capita')
@@ -101,21 +101,23 @@ Scatterplot.prototype = {
                 .attr('width', 300)
                 .attr('height', 180)
                 .attr('class','rect')
+                .attr('transform', 'translate(800,200)')
             chart.svg.append('text')
-                .attr('x', 50)
-                .attr('y', 50)
+                .attr('x', 850)
+                .attr('y', 250)
                 .attr('class', 'info')
                 .text('Country : ' + d.country + '')
             chart.svg.append('text')
-                .attr('x', 50)
-                .attr('y', 100)
+                .attr('x', 850)
+                .attr('y', 300)
                 .attr('class', 'info')
                 .text('Polity4 Index : ' + d.polity4 + '')
             chart.svg.append('text')
-                .attr('x', 50)
-                .attr('y', 150)
+                .attr('x', 850)
+                .attr('y', 350)
                 .attr('class', 'info')
                 .text('GDP per capita : $' + d.gdp_per_capita + '')}
+            
         
         var mouseout = function () {
             d3.select('.rect').remove()
@@ -124,6 +126,10 @@ Scatterplot.prototype = {
             d3.select('body').classed('animating', true)
             app.globals.animating = true
         }
+        
+        var lineFunction = d3.line()
+                .x(function(d){ return chart.scale.x(d.polity4)})
+                .y(function(d){ return chart.scale.y(d.gdp_per_capita)})
 
         enterCountries
             .attr('class', function (d) {
