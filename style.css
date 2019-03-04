@@ -1,0 +1,31 @@
+.continent-Africa {
+    fill: black;
+}
+
+.continent-Asia {
+    fill: red;
+}
+
+.continent-Australia {
+    fill: purple;
+}
+
+.continent-Europe {
+    fill: green;
+}
+
+.continent-North-America {
+    fill: blue;
+}
+
+.continent-South-America {
+    fill: yellow;
+}
+
+.rect {
+    opacity: 0.5;
+}
+
+.info{
+    fill: white
+}
