@@ -1,4 +1,4 @@
-var DATA_PATH = 'data_gdp.csv'
+var DATA_PATH = 'data.csv'
 var MIN_YEAR = 1960
 var MAX_YEAR = 2015
 var ANIMATION_INTERVAL = 750
@@ -86,58 +86,74 @@ Scatterplot.prototype = {
             return d.year === app.globals.selected.year
         })
 
+        var pastData = app.data.filter(function(d) {
+            return d.year <= app.globals.selected.year
+        })
+
+        
+        var countrypath = function(name){
+                return pastData.filter(function (d) {
+                return d.country === name
+            })}
+        
+        var line = d3.line()
+            .x(function(d){ return chart.scales.x(d.polity4);})
+            .y(function(d){ return chart.scales.y(d.gdp_per_capita);})
+
         var countries = chart.svg.selectAll('.country')
             .data(yearData, function (d) { return d.country })
 
         var enterCountries = countries.enter().append('circle')
         var exitCountries = countries.exit()
         var allCountries = countries.merge(enterCountries)
-        
+
         var mouseover = function(d){
             app.interval.stop()
             d3.select('body').classed('animating', false)
             app.globals.animating = false
-            table = chart.svg.append('rect')
-                .attr('width', 300)
-                .attr('height', 180)
-                .attr('class','rect')
-                .attr('transform', 'translate(800,200)')
-            chart.svg.append('text')
-                .attr('x', 850)
-                .attr('y', 250)
-                .attr('class', 'info')
-                .text('Country : ' + d.country + '')
-            chart.svg.append('text')
-                .attr('x', 850)
-                .attr('y', 300)
-                .attr('class', 'info')
-                .text('Polity4 Index : ' + d.polity4 + '')
-            chart.svg.append('text')
-                .attr('x', 850)
-                .attr('y', 350)
-                .attr('class', 'info')
-                .text('GDP per capita : $' + d.gdp_per_capita + '')}
+            var xPosition = parseFloat(d3.select(this).attr('cx'));
+            var yPosition = parseFloat(d3.select(this).attr('cy'));
+            
+            var tooltip = d3.select('#tooltip')
+						.style('left', xPosition + 'px')
+						.style('top', yPosition + 'px')						
+			tooltip.select('#Country')
+                        .text('Country: ' + d.country + '')
+
+            tooltip.select('#Polity4')
+                        .text('Polity4 Index: ' + d.polity4 + '')
+            
+            tooltip.select('#GDP_per_capita')
+                        .text('GDP per capita: $' + d.gdp_per_capita + '')
+                        
+			d3.select("#tooltip").classed("hidden", false);
+            
+            datum = countrypath(d.country)
+
+            chart.svg.append('path')
+                .datum(datum)
+                .attr('class', 'line')
+                .attr('d', line)
+            }
             
         
         var mouseout = function () {
-            d3.select('.rect').remove()
-            d3.selectAll('.info').remove()
+            d3.select('.line').remove()
+            d3.select("#tooltip").classed("hidden", true);
             app.interval = d3.interval(app.incrementYear, ANIMATION_INTERVAL)
             d3.select('body').classed('animating', true)
             app.globals.animating = true
         }
         
-        var lineFunction = d3.line()
-                .x(function(d){ return chart.scale.x(d.polity4)})
-                .y(function(d){ return chart.scale.y(d.gdp_per_capita)})
 
         enterCountries
             .attr('class', function (d) {
                 return 'country continent-' + d.continent.replace(' ', '-')
             })
+
+        chart.svg.selectAll('circle')
             .on('mouseover', mouseover)
             .on('mouseout', mouseout)
-        
 
 
         allCountries.transition().duration(ANIMATION_INTERVAL)
@@ -210,6 +226,8 @@ app = {
             .style('opacity', 1)
 
         app.toggleAnimation()
+
+
     },
 
     resize: function () {
@@ -233,7 +251,7 @@ app = {
         app.update()
     },
 
-    incrementYear: function () {
+    incrementYear: function (){
         var availableYears = app.globals.available.years;
         var currentIdx = availableYears.indexOf(app.globals.selected.year);
         app.setYear(availableYears[(currentIdx + 1) % availableYears.length]);

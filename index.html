@@ -9,26 +9,33 @@
 
 </head>
 <body>
-<div id="main">
+    <div id="tooltip" class="hidden">
+        <p><strong></strong></p>
+        <p><span id="Country"></span></p>
+        <p><span id="Polity4"></span></p>
+        <p><span id="GDP_per_capita"></span></p>
+    </div>
+    <div id="main">
 
-  <header>
-    <h1>Political Regimes & Economy</h1>
-  </header>
+      <header>
+        <h1>Political Regimes & Economy</h1>
+        <h2>Mouseover circles for more information</h2>
+      </header>
 
-  <div id="controls">
-    <button id="animate" class="play-button paused">Play</button>
-    <div id="year"><span id="year-label">2016</span></div>
-  </div>
+    <div id="controls">
+      <button id="animate" class="play-button paused">Play</button>
+      <div id="year"><span id="year-label">2016</span></div>
+    </div>
 
-  <div class="exhibit" id="scatterplot"></div>
+    <div class="exhibit" id="scatterplot"></div>
 
-  <div id="description"><p></p></div>
-  <div id="notes">
-    <p><strong>Data Source:</strong> <a href="https://www.systemicpeace.org/polity/polity4.htm" target="_blank">PolityIV</a></p>
-    <p><strong>Code Reference:</strong> <a href="https://github.com/cmgiven/gap-reminder-v4/blob/master/script.js" target="_blank">Github</a></p>
-  </div>
+      <div id="description"><p></p></div>
+      <div id="notes">
+        <p><strong>Data Source:</strong> <a href="https://www.systemicpeace.org/polity/polity4.htm" target="_blank">PolityIV</a></p>
+        <p><strong>Code Reference:</strong> <a href="https://github.com/cmgiven/gap-reminder-v4/blob/master/script.js" target="_blank">Github</a></p>
+    </div>
 
-</div>
+    </div>
 
 <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
 <script type="text/javascript" src="script.js"></script>
