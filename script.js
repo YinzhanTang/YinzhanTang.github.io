@@ -117,13 +117,16 @@ Scatterplot.prototype = {
             var tooltip = d3.select('#tooltip')
 						.style('left', xPosition + 'px')
 						.style('top', yPosition + 'px')						
-			tooltip.select('#Country')
+            tooltip.select('#Country')
+                        .style('color', 'black')
                         .text('Country: ' + d.country + '')
 
             tooltip.select('#Polity4')
+                        .style('color', 'black')
                         .text('Polity4 Index: ' + d.polity4 + '')
             
             tooltip.select('#GDP_per_capita')
+                        .style('color', 'black')
                         .text('GDP per capita: $' + d.gdp_per_capita + '')
                         
 			d3.select("#tooltip").classed("hidden", false);
@@ -132,13 +135,13 @@ Scatterplot.prototype = {
 
             chart.svg.append('path')
                 .datum(datum)
-                .attr('class', 'line')
+                .attr('class', 'pathline')
                 .attr('d', line)
             }
             
         
         var mouseout = function () {
-            d3.select('.line').remove()
+            d3.select('.pathline').remove()
             d3.select("#tooltip").classed("hidden", true);
             app.interval = d3.interval(app.incrementYear, ANIMATION_INTERVAL)
             d3.select('body').classed('animating', true)
@@ -151,15 +154,14 @@ Scatterplot.prototype = {
                 return 'country continent-' + d.continent.replace(' ', '-')
             })
 
-        chart.svg.selectAll('circle')
-            .on('mouseover', mouseover)
-            .on('mouseout', mouseout)
-
-
         allCountries.transition().duration(ANIMATION_INTERVAL)
             .attr('r', function (d) { return chart.scales.r(d.population) })
             .attr('cx', function (d) { return chart.scales.x(d.polity4) })
             .attr('cy', function (d) { return chart.scales.y(d.gdp_per_capita) })
+        
+        chart.svg.selectAll('circle')
+            .on('mouseover', mouseover)
+            .on('mouseout', mouseout)
 
         exitCountries.remove()
     }

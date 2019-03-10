@@ -2,12 +2,30 @@ rect:hover {
     fill: orange;
 }
 
+.x-axis line, .x-axis path {
+    stroke: #EDFBFB;
+
+}
+
+.y-axis line, .y-axis path {
+    stroke: #EDFBFB;
+
+}
+
+.y-axis text, .x-axis text {
+    fill: #EDFBFB
+}
+
+.axis-label {
+    fill: #EDFBFB
+}
+
 #tooltip {
     position: absolute;
-    width: 200px;
+    width: auto;
     height: auto;
     padding: 10px;
-    background-color: white;
+    background-color: #EDFBFB;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
@@ -28,33 +46,49 @@ rect:hover {
     line-height: 20px;}
     
 .continent-Africa {
-    stroke: rgb(102,194,165);
-    fill: rgba(102,194,165,.5);
+    stroke: rgb(166,216,84);
+    fill: rgba(166,216,84,.7);
 }
 
 .continent-Asia {
-    stroke: rgb(252,141,98);
-    fill: rgba(252,141,98,.5);
+    stroke: rgb(232,126,100);
+    fill: rgba(252,141,98,.7);
 }
 
 .continent-Australia {
-    stroke: rgb(141,160,203);
-    fill: rgba(141,160,203,.5);
+    stroke: rgb(142,216,226);
+    fill: rgba(142,216,226,.7);
 }
 
 .continent-Europe {
     stroke: rgb(231,138,195);
-    fill: rgba(231,138,195,.5);
+    fill: rgba(231,138,195,.7);
 }
 
 .continent-North-America {
-    stroke: rgb(166,216,84);
-    fill: rgba(166,216,84,.5);
+    stroke: rgb(5,219,247);
+    fill: rgba(5,219,247,.7);
 }
 
 .continent-South-America {
     stroke: rgb(255,217,47);
-    fill: rgba(255,217,47,.5);
+    fill: rgba(255,217,47,.7);
+}
+
+
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    background: #7EC5B6;
+    color: #EDFBFB;
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.5em;
 }
 
 .rect {
@@ -65,9 +99,9 @@ rect:hover {
     fill: white
 }
 
-.line {
+.pathline {
     fill: none;
-    stroke: black;
+    stroke: #EDFBFB;
     stroke-width: 2;
     pointer-events: none;
 }
