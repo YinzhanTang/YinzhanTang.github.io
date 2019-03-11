@@ -1,7 +1,7 @@
 var DATA_PATH = 'data.csv'
 var MIN_YEAR = 1960
 var MAX_YEAR = 2015
-var ANIMATION_INTERVAL = 750
+var ANIMATION_INTERVAL = 150
 
 var Scatterplot
 var Controls
