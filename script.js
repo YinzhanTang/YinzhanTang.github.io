@@ -33,14 +33,14 @@ Scatterplot.prototype = {
                 .range([0, 60]),
             x: d3.scaleLinear()
                 .domain([-10, 10])
-                .range([0, width-300]),
+                .range([0, width - 300]),
             y: d3.scaleLog()
                 .domain([1, 100000])
                 .range([height, 0])
         }
 
         var xAxis = d3.axisBottom().scale(chart.scales.x)
-        var yAxis = d3.axisLeft().scale(chart.scales.y).ticks(5,"$")
+        var yAxis = d3.axisLeft().scale(chart.scales.y).ticks(5, "$")
 
         chart.svg.append('g')
             .attr('class', 'x-axis')
@@ -49,32 +49,104 @@ Scatterplot.prototype = {
 
         chart.svg.append('g')
             .attr('class', 'y-axis')
-            .attr('transform', 'translate(' + width/2.83 + ',0)')
+            .attr('transform', 'translate(' + width / 2.83 + ',0)')
             .call(yAxis)
-        
-        chart.svg.append('text')      
+
+        chart.svg.append('text')
             .attr('x', 0)
-            .attr('y', height-50)
+            .attr('y', height - 50)
             .attr('class', 'axis-label')
             .text('Autocracy')
-        
+
         chart.svg.append('text')
-            .attr('x', width-380)
-            .attr('y', height-50)
+            .attr('x', width - 380)
+            .attr('y', height - 50)
             .attr('class', 'axis-label')
             .text('Democracy')
-        
+
         chart.svg.append('text')
-            .attr('x', width/2-200)
-            .attr('y', height+40)
+            .attr('x', width / 2 - 200)
+            .attr('y', height + 40)
             .attr('class', 'axis-label')
             .text('PolityIV Index')
-        
+
         chart.svg.append('text')
-            .attr('x', width/2-200)
+            .attr('x', width / 2 - 200)
             .attr('y', -15)
             .attr('class', 'axis-label')
             .text('$GDP per capita')
+
+        chart.svg.append("rect")
+            .attr("width", 15)
+            .attr("height", 15)
+            .attr("transform", "translate(800,350)")
+            .attr("class", "rect1");
+      
+        chart.svg.append("rect")
+            .attr("width", 15)
+            .attr("height", 15)
+            .attr("transform", "translate(800,380)")
+            .attr("class", "rect2");
+      
+        chart.svg.append("rect")
+            .attr("width", 15)
+            .attr("height", 15)
+            .attr("transform", "translate(800,410)")
+            .attr("class", "rect3");
+    
+        chart.svg.append("rect")
+            .attr("width", 15)
+            .attr("height", 15)
+            .attr("transform", "translate(800,440)")
+            .attr("class", "rect4");
+    
+        chart.svg.append("rect")
+            .attr("width", 15)
+            .attr("height", 15)
+            .attr("transform", "translate(800,470)")
+            .attr("class", "rect5");
+        
+        chart.svg.append("rect")
+            .attr("width", 15)
+            .attr("height", 15)
+            .attr("transform", "translate(800,320)")
+            .attr("class", "rect6");
+      
+        chart.svg.append("text")
+            .attr("x", 830)
+            .attr("y", 363)
+            .text("Asia")
+            .attr("class", "label")
+            
+        chart.svg.append("text")
+            .attr("x", 830)
+            .attr("y", 394)
+            .text("Africa")
+            .attr("class", "label")
+    
+        chart.svg.append("text")
+            .attr("x", 830)
+            .attr("y", 424)
+            .text("Europe")
+            .attr("class", "label")
+    
+        chart.svg.append("text")
+            .attr("x", 830)
+            .attr("y", 334)
+            .text("Australia")
+            .attr("class", "label")
+    
+        chart.svg.append("text")
+            .attr("x", 830)
+            .attr("y", 453)
+            .text("North Amercia")
+            .attr("class", "label")
+        
+        chart.svg.append("text")
+            .attr("x", 830)
+            .attr("y", 484)
+            .text("South Amercia")
+            .attr("class", "label")
 
         chart.update()
     },
@@ -86,19 +158,20 @@ Scatterplot.prototype = {
             return d.year === app.globals.selected.year
         })
 
-        var pastData = app.data.filter(function(d) {
+        var pastData = app.data.filter(function (d) {
             return d.year <= app.globals.selected.year
         })
 
-        
-        var countrypath = function(name){
-                return pastData.filter(function (d) {
+
+        var countrypath = function (name) {
+            return pastData.filter(function (d) {
                 return d.country === name
-            })}
-        
+            })
+        }
+
         var line = d3.line()
-            .x(function(d){ return chart.scales.x(d.polity4);})
-            .y(function(d){ return chart.scales.y(d.gdp_per_capita);})
+            .x(function (d) { return chart.scales.x(d.polity4); })
+            .y(function (d) { return chart.scales.y(d.gdp_per_capita); })
 
         var countries = chart.svg.selectAll('.country')
             .data(yearData, function (d) { return d.country })
@@ -107,39 +180,57 @@ Scatterplot.prototype = {
         var exitCountries = countries.exit()
         var allCountries = countries.merge(enterCountries)
 
-        var mouseover = function(d){
+        var mouseover = function (d) {
             app.interval.stop()
             d3.select('body').classed('animating', false)
             app.globals.animating = false
             var xPosition = parseFloat(d3.select(this).attr('cx'));
             var yPosition = parseFloat(d3.select(this).attr('cy'));
-            
+
             var tooltip = d3.select('#tooltip')
-						.style('left', xPosition + 'px')
-						.style('top', yPosition + 'px')						
+                .style('left', xPosition + 'px')
+                .style('top', yPosition + 'px')
+
             tooltip.select('#Country')
-                        .style('color', 'black')
-                        .text('Country: ' + d.country + '')
+                .style('color', function () {
+                    if (d.continent === 'Europe') { return 'rgb(231,138,195)' };
+                    if (d.continent === 'Asia') { return 'rgb(232,126,100)'}
+                    if (d.continent === 'Australia') { return 'rgb(142,216,226)'}
+                    if (d.continent === 'Africa') { return 'rgb(0,127,13)'}
+                    if (d.continent === 'North America') { return 'rgb(48,195,232)'}
+                    if (d.continent === 'South America') { return 'rgb(177,155,26)'}
+                })
+                .text(d.country)
+
 
             tooltip.select('#Polity4')
-                        .style('color', 'black')
-                        .text('Polity4 Index: ' + d.polity4 + '')
-            
+                .style('color', 'black')
+                .text('Polity4 Index: ' + d.polity4 + '')
+
             tooltip.select('#GDP_per_capita')
-                        .style('color', 'black')
-                        .text('GDP per capita: $' + d.gdp_per_capita + '')
-                        
-			d3.select("#tooltip").classed("hidden", false);
-            
+                .style('color', 'black')
+                .text('GDP per capita: $' + d.gdp_per_capita + '')
+
+            tooltip.select('#tip1')
+                .style('color', 'grey')
+                .text('(The white line indicates')
+
+            tooltip.select('#tip2')
+                .style('color', 'grey')
+                .text('the path of movement)')
+
+            d3.select("#tooltip").classed("hidden", false);
+
             datum = countrypath(d.country)
 
             chart.svg.append('path')
                 .datum(datum)
                 .attr('class', 'pathline')
                 .attr('d', line)
-            }
-            
-        
+
+        }
+
+
         var mouseout = function () {
             d3.select('.pathline').remove()
             d3.select("#tooltip").classed("hidden", true);
@@ -147,7 +238,7 @@ Scatterplot.prototype = {
             d3.select('body').classed('animating', true)
             app.globals.animating = true
         }
-        
+
 
         enterCountries
             .attr('class', function (d) {
@@ -158,7 +249,7 @@ Scatterplot.prototype = {
             .attr('r', function (d) { return chart.scales.r(d.population) })
             .attr('cx', function (d) { return chart.scales.x(d.polity4) })
             .attr('cy', function (d) { return chart.scales.y(d.gdp_per_capita) })
-        
+
         chart.svg.selectAll('circle')
             .on('mouseover', mouseover)
             .on('mouseout', mouseout)
@@ -210,7 +301,7 @@ app = {
             var event = d3.event
 
             switch (event.which) {
-                case 32: 
+                case 32:
                     app.toggleAnimation()
                     break
 
@@ -253,7 +344,7 @@ app = {
         app.update()
     },
 
-    incrementYear: function (){
+    incrementYear: function () {
         var availableYears = app.globals.available.years;
         var currentIdx = availableYears.indexOf(app.globals.selected.year);
         app.setYear(availableYears[(currentIdx + 1) % availableYears.length]);
@@ -269,11 +360,11 @@ app = {
             d3.select('body').classed('animating', true)
             app.globals.animating = true
         }
-    
+
 
         app.update()
-    
-    
+
+
     }
 }
 
