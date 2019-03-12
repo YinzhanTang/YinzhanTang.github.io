@@ -43,12 +43,15 @@ Scatterplot.prototype = {
         var yAxis = d3.axisLeft().scale(chart.scales.y).ticks(5, "$")
 
         chart.svg.append('g')
+            .style('font', "14px times")
+            .style('font', "'Lato', Helvetica, Arial, sans-serif")
             .attr('class', 'x-axis')
             .attr('transform', 'translate(0,' + height + ')')
             .call(xAxis)
 
         chart.svg.append('g')
             .attr('class', 'y-axis')
+            .style('font', "14px times")
             .attr('transform', 'translate(' + width / 2.83 + ',0)')
             .call(yAxis)
 

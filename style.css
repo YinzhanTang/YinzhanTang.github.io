@@ -41,7 +41,9 @@ rect:hover {
 #tooltip.hidden {
     display: none;
 }
-
+#year {
+    font-size: 22px;
+}
 #tooltip p {
     margin: 0;
     font-family: sans-serif;
