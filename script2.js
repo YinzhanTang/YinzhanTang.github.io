@@ -6,6 +6,7 @@ var ANIMATION_INTERVAL = 500
 var Scatterplot
 var Controls
 var app
+var Menu
 
 Scatterplot = function () {
     this.setup()
@@ -69,10 +70,10 @@ Scatterplot.prototype = {
             .text('Democracy')
 
         chart.svg.append('text')
-            .attr('x', width / 2 - 200)
+            .attr('x', width / 2 - 260)
             .attr('y', height + 40)
             .attr('class', 'axis-label')
-            .text('PolityIV Index')
+            .text('Democracy Index (PolityIV)')
 
         chart.svg.append('text')
             .attr('x', width / 2 - 260)
@@ -261,9 +262,10 @@ Scatterplot.prototype = {
     }
 
 }
-Menu = function (data, selector) {
+Menu = function (selector) {
     dropdown = d3.select(selector)
-        .append('select')
+        .style("left", "100px")
+        .style("top", "120px")
         .selectAll('option')
         .data(d3.map(app.data, function (d) {
             return d.country;
@@ -285,10 +287,6 @@ Menu = function (data, selector) {
         countrydata = data.filter(function (d) {
             return d.country === selectedCountry
         })
-
-        app.initialize(countrydata)
-
-
     })
 
 }
@@ -334,6 +332,7 @@ app = {
         app.data = data
         app.components.scatterplot = new Scatterplot('#scatterplot')
         app.components.controls = new Controls('#controls')
+        app.components.menue = new Menu('select')
         d3.select(window).on('keydown', function () {
             var event = d3.event
 
@@ -405,7 +404,7 @@ app = {
             var selectedCountry = d3.select(this)
                 .select('select')
                 .property('value')
-            
+
             app.setCountry(selectedCountry)
         })
 
