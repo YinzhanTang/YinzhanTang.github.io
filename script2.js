@@ -75,10 +75,10 @@ Scatterplot.prototype = {
             .text('PolityIV Index')
 
         chart.svg.append('text')
-            .attr('x', width / 2 - 200)
+            .attr('x', width / 2 - 260)
             .attr('y', -15)
             .attr('class', 'axis-label')
-            .text('$GDP per capita')
+            .text('$GDP per capita (Nominal)')
 
         chart.svg.append('rect')
             .attr('width', 15)
