@@ -7,6 +7,48 @@ var Scatterplot
 var Controls
 var app
 var Menu
+var Linechart
+
+Linechart = function (selector) {
+    this.div = d3.select(selector)
+    this.setup()
+}
+
+Linechart.prototype = {
+
+    setup: function () {
+
+        this.div.append('select')
+            .selectAll('option')
+            .data(d3.map(app.data, function (d) {
+                return d.country;
+            }).keys())
+            .enter()
+            .append('option')
+            .attr('value', function (d) {
+                return d;
+            })
+            .text(function (d) {
+                return d;
+            })
+
+
+        this.div.on('change', function () {
+
+            var selectedCountry = d3.select(this)
+                .select('select')
+                .property('value')
+
+            app.data = app.data.filter(function (d) {
+                return d.country === selectedCountry
+            
+            })
+            console.log(app.data)
+
+        })
+    }
+
+}
 
 Scatterplot = function () {
     this.setup()
@@ -24,9 +66,11 @@ Scatterplot.prototype = {
 
         chart.svg = d3.select('#scatterplot')
             .append('svg')
+            .attr('id', 'svg')
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
             .append('g')
+            .attr('id', 'g')
             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
         chart.scales = {
@@ -157,6 +201,7 @@ Scatterplot.prototype = {
     },
 
     update: function () {
+
         var chart = this
 
         var yearData = app.data.filter(function (d) {
@@ -172,6 +217,8 @@ Scatterplot.prototype = {
                 return d.country === name
             })
         }
+
+
 
         var line = d3.line()
             .x(function (d) { return chart.scales.x(d.polity4); })
@@ -262,34 +309,6 @@ Scatterplot.prototype = {
     }
 
 }
-Menu = function (selector) {
-    dropdown = d3.select(selector)
-        .style("left", "100px")
-        .style("top", "120px")
-        .selectAll('option')
-        .data(d3.map(app.data, function (d) {
-            return d.country;
-        }).keys())
-        .enter()
-        .append('option')
-        .attr('value', function (d) {
-            return d;
-        })
-        .text(function (d) {
-            return d;
-        })
-
-    dropdown.on('change', function () {
-        var selectedCountry = d3.select(this)
-            .select('select')
-            .property('value')
-
-        countrydata = data.filter(function (d) {
-            return d.country === selectedCountry
-        })
-    })
-
-}
 
 
 Controls = function (selector) {
@@ -318,6 +337,8 @@ Controls.prototype = {
     }
 }
 
+
+
 app = {
     data: [],
     components: [],
@@ -330,9 +351,9 @@ app = {
 
     initialize: function (data) {
         app.data = data
+        app.components.Linechart = new Linechart('#countrydown')
         app.components.scatterplot = new Scatterplot('#scatterplot')
         app.components.controls = new Controls('#controls')
-        app.components.menue = new Menu('select')
         d3.select(window).on('keydown', function () {
             var event = d3.event
 
@@ -359,6 +380,10 @@ app = {
 
     },
 
+    restart: function(data) {
+        app.data = data
+    },
+
     resize: function () {
         for (var component in app.components) {
             if (app.components[component].resize) {
@@ -383,31 +408,6 @@ app = {
     setCountry: function (country) {
         app.globals.selected.country = country;
         app.update()
-    },
-
-    changeCountry: function () {
-        var dropdown = d3.select('#countrydown')
-            .append('select')
-            .selectAll('option')
-            .data(d3.map(app.data, function (d) {
-                return d.country;
-            }).keys())
-            .enter()
-            .append('option')
-            .attr('value', function (d) {
-                return d;
-            })
-            .text(function (d) {
-                return d;
-            })
-        dropdown.on('change', function () {
-            var selectedCountry = d3.select(this)
-                .select('select')
-                .property('value')
-
-            app.setCountry(selectedCountry)
-        })
-
     },
 
     incrementYear: function () {
