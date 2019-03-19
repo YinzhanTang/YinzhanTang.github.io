@@ -35,6 +35,10 @@ Linechart.prototype = {
 
         this.div.on('change', function () {
 
+            app.data = app.data2
+
+            console.log(app.data)
+
             var selectedCountry = d3.select(this)
                 .select('select')
                 .property('value')
@@ -44,7 +48,8 @@ Linechart.prototype = {
             
             })
             console.log(app.data)
-
+        
+        
         })
     }
 
@@ -351,6 +356,7 @@ app = {
 
     initialize: function (data) {
         app.data = data
+        app.data2 = data
         app.components.Linechart = new Linechart('#countrydown')
         app.components.scatterplot = new Scatterplot('#scatterplot')
         app.components.controls = new Controls('#controls')
