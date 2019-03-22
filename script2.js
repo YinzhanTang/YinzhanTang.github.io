@@ -6,19 +6,27 @@ var ANIMATION_INTERVAL = 500
 var Scatterplot
 var Controls
 var app
-var Menu
-var Linechart
+var Countrymenu
+var Yearmenu
 
-Linechart = function (selector) {
+Countrymenu = function (selector) {
     this.div = d3.select(selector)
+        .attr('transform', 'translate(200,200)')
     this.setup()
 }
 
-Linechart.prototype = {
+Countrymenu.prototype = {
 
     setup: function () {
 
         this.div.append('select')
+            .attr('id', 'menu1')
+            .append('option')
+            .attr('value', 'default')
+            .attr('selected', 'selected')
+            .text('Select a country')
+
+        this.div.select('select')
             .selectAll('option')
             .data(d3.map(app.data, function (d) {
                 return d.country;
@@ -28,12 +36,17 @@ Linechart.prototype = {
             .attr('value', function (d) {
                 return d;
             })
+            .property("selected", function (d) { return d === 'defaultOptionName'; })
             .text(function (d) {
                 return d;
             })
 
 
+
+
         this.div.on('change', function () {
+
+            d3.selectAll('.pathline').remove()
 
             app.data = app.data2
 
@@ -45,11 +58,70 @@ Linechart.prototype = {
 
             app.data = app.data.filter(function (d) {
                 return d.country === selectedCountry
-            
+
             })
+
+            var pastData = app.data.filter(function (d) {
+                return d.year <= app.globals.selected.year
+            })
+
+            console.log(pastData)
+        })
+    }
+
+}
+
+Yearmenu = function (selector) {
+    this.div = d3.select(selector)
+        .attr('transform', 'translate(200,200)')
+    this.setup()
+}
+
+Yearmenu.prototype = {
+
+    setup: function () {
+
+        this.div.append('select')
+            .attr('id', 'menu2')
+            .append('option')
+            .attr('value', 'default')
+            .attr('selected', 'selected')
+            .text('Select a country')
+
+        this.div.select('select')
+            .selectAll('option')
+            .data(d3.map(app.data, function (d) {
+                return d.year;
+            }).keys())
+            .enter()
+            .append('option')
+            .attr('value', function (d) {
+                return d;
+            })
+            .property("selected", function (d) { return d === 'defaultOptionName'; })
+            .text(function (d) {
+                return d;
+            })
+
+
+
+
+        this.div.on('change', function () {
+
+            d3.selectAll('.pathline').remove()
+
+            app.data = app.data2
+
             console.log(app.data)
-        
-        
+
+            var selectedYear = d3.select(this)
+                .select('select')
+                .property('value')
+
+            app.globals.selected.year = selectedYear
+
+            console.log(app.globals.selected.year)
+
         })
     }
 
@@ -213,6 +285,8 @@ Scatterplot.prototype = {
             return d.year === app.globals.selected.year
         })
 
+        console.log(yearData)
+
         var pastData = app.data.filter(function (d) {
             return d.year <= app.globals.selected.year
         })
@@ -357,7 +431,7 @@ app = {
     initialize: function (data) {
         app.data = data
         app.data2 = data
-        app.components.Linechart = new Linechart('#countrydown')
+        app.components.countrymenu = new Countrymenu('#countrydown')
         app.components.scatterplot = new Scatterplot('#scatterplot')
         app.components.controls = new Controls('#controls')
         d3.select(window).on('keydown', function () {
@@ -386,7 +460,7 @@ app = {
 
     },
 
-    restart: function(data) {
+    restart: function (data) {
         app.data = data
     },
 

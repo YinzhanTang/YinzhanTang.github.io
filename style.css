@@ -204,3 +204,8 @@ body {
     background-color: white;
     right:0px;
 }
+
+#menu {
+    left: 100px;
+    top: 500px;
+}
